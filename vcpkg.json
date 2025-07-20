@@ -1,0 +1,11 @@
+{
+  "dependencies": [
+    "cpr",
+    "fmt",
+    "miniz",
+    "nlohmann-json",
+    "range-v3",
+    "wil",
+    "wtl"
+  ]
+}

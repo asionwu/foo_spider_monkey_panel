@@ -1,0 +1,27 @@
+name: build
+on: push
+jobs:
+  build:
+    runs-on: windows-2025
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Set up vcpkg
+      run: |
+        cd C:\vcpkg && git pull && bootstrap-vcpkg
+        vcpkg integrate install
+
+    - name: Build
+      run: msbuild src\foo_spider_monkey_panel.sln
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: foo_spider_monkey_panel-${{ github.ref_name }}
+        path: component
