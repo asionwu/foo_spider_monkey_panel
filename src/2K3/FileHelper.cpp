@@ -15,6 +15,23 @@ bool FileHelper::rename(std::wstring_view from, std::wstring_view to)
 	return ec.value() == 0;
 }
 
+fs::copy_options FileHelper::create_options(bool overwrite, bool recur)
+{
+	fs::copy_options options{};
+
+	if (overwrite)
+	{
+		options |= fs::copy_options::overwrite_existing;
+	}
+
+	if (recur)
+	{
+		options |= fs::copy_options::recursive;
+	}
+
+	return options;
+}
+
 uint32_t FileHelper::get_stream_size(IStream* stream)
 {
 	STATSTG stats{};
@@ -96,23 +113,6 @@ bool FileHelper::write(const void* data, size_t size)
 		return false;
 
 	return f.write((char*)data, size).good();
-}
-
-fs::copy_options FileHelper::create_options(bool overwrite, bool recur)
-{
-	fs::copy_options options{};
-
-	if (overwrite)
-	{
-		options |= fs::copy_options::overwrite_existing;
-	}
-
-	if (recur)
-	{
-		options |= fs::copy_options::recursive;
-	}
-
-	return options;
 }
 
 std::unique_ptr<Gdiplus::Bitmap> FileHelper::load_image()

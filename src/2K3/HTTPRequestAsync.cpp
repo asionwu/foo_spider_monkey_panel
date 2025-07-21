@@ -12,10 +12,12 @@ HTTPRequestAsync::HTTPRequestAsync(Type type, HWND wnd, uint32_t task_id, std::s
 	, m_user_agent_or_headers(user_agent_or_headers)
 	, m_body(body) {}
 
+#pragma region static
 bool HTTPRequestAsync::is_supported_content_type(std::string_view content_type)
 {
 	return content_type.contains("text") || content_type.contains("json") || content_type.contains("xml");
 }
+#pragma endregion
 
 cpr::Response HTTPRequestAsync::get_response()
 {

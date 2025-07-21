@@ -6,6 +6,7 @@ public:
 	FileHelper(std::wstring_view path);
 
 	static bool rename(std::wstring_view from, std::wstring_view to);
+	static std::filesystem::copy_options create_options(bool overwrite, bool recur = false);
 	static uint32_t get_stream_size(IStream* stream);
 
 	HRESULT read(wil::com_ptr<IStream>& stream);
@@ -24,7 +25,5 @@ public:
 	static constexpr uint32_t kMaxStreamSize = 64 * 1024 * 1024;
 
 private:
-	std::filesystem::copy_options create_options(bool overwrite, bool recur = false);
-
 	std::filesystem::path m_path;
 };

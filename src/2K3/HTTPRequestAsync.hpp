@@ -15,7 +15,8 @@ public:
 	void run();
 
 private:
-	bool is_supported_content_type(std::string_view content_type);
+	static bool is_supported_content_type(std::string_view content_type);
+	
 	cpr::Response get_response();
 	void add_headers();
 
