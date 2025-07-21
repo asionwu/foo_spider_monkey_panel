@@ -75,8 +75,8 @@ public: // accessors
 
 	[[nodiscard]] t_size& DlgCode();
 	[[nodiscard]] PanelType GetPanelType() const;
-	virtual DWORD GetColour(unsigned type, const GUID& guid = pfc::guid_null) = 0;
-	virtual HFONT GetFont(unsigned type, const GUID& guid = pfc::guid_null) = 0;
+	virtual DWORD GetColour(const GUID& guid, uint32_t type = 0U) = 0;
+	virtual HFONT GetFont(const GUID& guid, uint32_t type = 0U) = 0;
 
 	void SetSettings_ScriptInfo(const std::string& scriptName, const std::string& scriptAuthor, const std::string& scriptVersion);
 	void SetSettings_PanelName(const std::string& panelName);

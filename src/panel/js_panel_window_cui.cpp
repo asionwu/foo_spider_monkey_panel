@@ -12,28 +12,20 @@ namespace smp::panel
 	class js_panel_window_cui : public js_panel_window, public uie::container_uie_window_v3
 	{
 	protected:
-		DWORD GetColour(unsigned type, const GUID& guid) final
+		DWORD GetColour(const GUID& guid, uint32_t type) final
 		{
-			COLORREF colour = 0; ///< black
-			if (type <= cui::colours::colour_active_item_frame)
-			{
-				cui::colours::helper helper(guid);
-				colour = helper.get_colour(static_cast<cui::colours::colour_identifier_t>(type));
-			}
-
+			const auto colour = cui::colours::helper(guid).get_colour(static_cast<cui::colours::colour_identifier_t>(type));
 			return smp::colour::ColorrefToArgb(colour);
 		}
 
-		HFONT GetFont(unsigned type, const GUID& guid) final
+		HFONT GetFont(const GUID& guid, uint32_t type) final
 		{
 			auto api = fb2k::std_api_get<cui::fonts::manager>();
 
 			if (guid != pfc::guid_null)
 				return api->get_font(guid);
-			else if (type <= cui::fonts::font_type_labels)
-				return api->get_font(static_cast<cui::fonts::font_type_t>(type));
 			else
-				return nullptr;
+				return api->get_font(static_cast<cui::fonts::font_type_t>(type));
 		}
 
 		void notify_size_limit_changed(LPARAM lp) final

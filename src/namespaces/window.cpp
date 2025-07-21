@@ -461,6 +461,7 @@ uint32_t Window::GetColourCUI(uint32_t type, const std::wstring& guidstr)
 	}
 
 	qwr::QwrException::ExpectTrue(parentPanel_.GetPanelType() == panel::PanelType::CUI, "Can be called only in CUI");
+	qwr::QwrException::ExpectTrue(type <= cui::colours::colour_active_item_frame, "Invalid colour type specified");
 
 	GUID guid{};
 
@@ -470,7 +471,7 @@ uint32_t Window::GetColourCUI(uint32_t type, const std::wstring& guidstr)
 		qwr::error::CheckHR(hr, "CLSIDFromString");
 	}
 
-	return parentPanel_.GetColour(type, guid);
+	return parentPanel_.GetColour(guid, type);
 }
 
 uint32_t Window::GetColourCUIWithOpt(size_t optArgCount, uint32_t type, const std::wstring& guidstr)
@@ -488,14 +489,23 @@ uint32_t Window::GetColourCUIWithOpt(size_t optArgCount, uint32_t type, const st
 
 uint32_t Window::GetColourDUI(uint32_t type)
 {
+	static constexpr std::array guids =
+	{
+		&ui_color_text,
+		&ui_color_background,
+		&ui_color_highlight,
+		&ui_color_selection,
+	};
+
 	if (isFinalized_)
 	{
 		return 0;
 	}
 
 	qwr::QwrException::ExpectTrue(parentPanel_.GetPanelType() == panel::PanelType::DUI, "Can be called only in DUI");
+	qwr::QwrException::ExpectTrue(type < guids.size(), "Invalid colour type specified");
 
-	return parentPanel_.GetColour(type);
+	return parentPanel_.GetColour(*guids[type]);
 }
 
 JSObject* Window::GetFontCUI(uint32_t type, const std::wstring& guidstr)
@@ -506,6 +516,7 @@ JSObject* Window::GetFontCUI(uint32_t type, const std::wstring& guidstr)
 	}
 
 	qwr::QwrException::ExpectTrue(parentPanel_.GetPanelType() == panel::PanelType::CUI, "Can be called only in CUI");
+	qwr::QwrException::ExpectTrue(type <= cui::fonts::font_type_labels, "Invalid font type specified");
 
 	GUID guid{};
 
@@ -515,19 +526,15 @@ JSObject* Window::GetFontCUI(uint32_t type, const std::wstring& guidstr)
 		qwr::error::CheckHR(hr, "CLSIDFromString");
 	}
 
-	auto hFont = gdi::CreateUniquePtr(parentPanel_.GetFont(type, guid));
-	if (!hFont)
-	{ // Not an error: font not found
-		return nullptr;
-	}
-
+	auto hFont = gdi::CreateUniquePtr(parentPanel_.GetFont(guid, type));
 	std::unique_ptr<Gdiplus::Font> pGdiFont(new Gdiplus::Font(parentPanel_.GetHDC(), hFont.get()));
-	if (!gdi::IsGdiPlusObjectValid(pGdiFont))
-	{ // Not an error: font not found
-		return nullptr;
+
+	if (gdi::IsGdiPlusObjectValid(pGdiFont))
+	{
+		return JsGdiFont::CreateJs(pJsCtx_, std::move(pGdiFont), hFont.release(), true);
 	}
 
-	return JsGdiFont::CreateJs(pJsCtx_, std::move(pGdiFont), hFont.release(), true);
+	return nullptr;
 }
 
 JSObject* Window::GetFontCUIWithOpt(size_t optArgCount, uint32_t type, const std::wstring& guidstr)
@@ -545,26 +552,33 @@ JSObject* Window::GetFontCUIWithOpt(size_t optArgCount, uint32_t type, const std
 
 JSObject* Window::GetFontDUI(uint32_t type)
 {
+	static constexpr std::array guids =
+	{
+		&ui_font_default,
+		&ui_font_tabs,
+		&ui_font_lists,
+		&ui_font_playlists,
+		&ui_font_statusbar,
+		&ui_font_console,
+	};
+
 	if (isFinalized_)
 	{
 		return nullptr;
 	}
 
 	qwr::QwrException::ExpectTrue(parentPanel_.GetPanelType() == panel::PanelType::DUI, "Can be called only in DUI");
+	qwr::QwrException::ExpectTrue(type < guids.size(), "Invalid font type specified");
 
-	HFONT hFont = parentPanel_.GetFont(type); // No need to delete, it is managed by DUI
-	if (!hFont)
-	{ // Not an error: font not found
-		return nullptr;
-	}
-
+	auto hFont = parentPanel_.GetFont(*guids[type]); 
 	std::unique_ptr<Gdiplus::Font> pGdiFont(new Gdiplus::Font(parentPanel_.GetHDC(), hFont));
-	if (!gdi::IsGdiPlusObjectValid(pGdiFont))
-	{ // Not an error: font not found
-		return nullptr;
+
+	if (gdi::IsGdiPlusObjectValid(pGdiFont))
+	{
+		return JsGdiFont::CreateJs(pJsCtx_, std::move(pGdiFont), hFont, false);
 	}
 
-	return JsGdiFont::CreateJs(pJsCtx_, std::move(pGdiFont), hFont, false);
+	return nullptr;
 }
 
 JS::Value Window::GetProperty(const std::wstring& name, JS::HandleValue defaultval)

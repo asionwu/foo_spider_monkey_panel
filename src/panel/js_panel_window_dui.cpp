@@ -15,42 +15,15 @@ namespace smp::panel
 	{
 #pragma region js_panel_window
 	protected:
-		DWORD GetColour(unsigned type, const GUID&) final
+		DWORD GetColour(const GUID& guid, uint32_t) final
 		{
-			static constexpr std::array guids =
-			{
-				&ui_color_text,
-				&ui_color_background,
-				&ui_color_highlight,
-				&ui_color_selection,
-			};
-
-			uint32_t colour{};
-
-			if (type < guids.size())
-			{
-				colour = uiCallback_->query_std_color(*guids[type]);
-			}
-			
+			const auto colour = uiCallback_->query_std_color(guid);
 			return smp::colour::ColorrefToArgb(colour);
 		}
 
-		HFONT GetFont(unsigned type, const GUID&) final
+		HFONT GetFont(const GUID& guid, uint32_t) final
 		{
-			static constexpr std::array guids =
-			{
-				&ui_font_default,
-				&ui_font_tabs,
-				&ui_font_lists,
-				&ui_font_playlists,
-				&ui_font_statusbar,
-				&ui_font_console,
-			};
-
-			if (type < guids.size())
-				return uiCallback_->query_font_ex(*guids[type]);
-			else
-				return nullptr;
+			return uiCallback_->query_font_ex(guid);
 		}
 
 		void notify_size_limit_changed(LPARAM) final
