@@ -462,12 +462,9 @@ uint32_t Window::GetColourCUI(uint32_t type, const std::wstring& guidstr)
 
 	qwr::QwrException::ExpectTrue(parentPanel_.GetPanelType() == panel::PanelType::CUI, "Can be called only in CUI");
 
-	GUID guid;
-	if (guidstr.empty())
-	{
-		memcpy(&guid, &pfc::guid_null, sizeof(guid));
-	}
-	else
+	GUID guid{};
+
+	if (!guidstr.empty())
 	{
 		HRESULT hr = CLSIDFromString(guidstr.c_str(), &guid);
 		qwr::error::CheckHR(hr, "CLSIDFromString");
@@ -498,7 +495,7 @@ uint32_t Window::GetColourDUI(uint32_t type)
 
 	qwr::QwrException::ExpectTrue(parentPanel_.GetPanelType() == panel::PanelType::DUI, "Can be called only in DUI");
 
-	return parentPanel_.GetColour(type, pfc::guid_null);
+	return parentPanel_.GetColour(type);
 }
 
 JSObject* Window::GetFontCUI(uint32_t type, const std::wstring& guidstr)
@@ -510,12 +507,9 @@ JSObject* Window::GetFontCUI(uint32_t type, const std::wstring& guidstr)
 
 	qwr::QwrException::ExpectTrue(parentPanel_.GetPanelType() == panel::PanelType::CUI, "Can be called only in CUI");
 
-	GUID guid;
-	if (guidstr.empty())
-	{
-		memcpy(&guid, &pfc::guid_null, sizeof(guid));
-	}
-	else
+	GUID guid{};
+
+	if (!guidstr.empty())
 	{
 		HRESULT hr = CLSIDFromString(guidstr.c_str(), &guid);
 		qwr::error::CheckHR(hr, "CLSIDFromString");
@@ -558,7 +552,7 @@ JSObject* Window::GetFontDUI(uint32_t type)
 
 	qwr::QwrException::ExpectTrue(parentPanel_.GetPanelType() == panel::PanelType::DUI, "Can be called only in DUI");
 
-	HFONT hFont = parentPanel_.GetFont(type, pfc::guid_null); // No need to delete, it is managed by DUI
+	HFONT hFont = parentPanel_.GetFont(type); // No need to delete, it is managed by DUI
 	if (!hFont)
 	{ // Not an error: font not found
 		return nullptr;

@@ -363,8 +363,6 @@ copy /Y "%mozjs_dir%nspr4.dll" "%component_path%"</Command>
     <ClInclude Include="panel\drag_action_params.h" />
     <ClInclude Include="panel\edit_script.h" />
     <ClInclude Include="panel\js_panel_window.h" />
-    <ClInclude Include="panel\js_panel_window_cui.h" />
-    <ClInclude Include="panel\js_panel_window_dui.h" />
     <ClInclude Include="panel\modal_blocking_scope.h" />
     <ClInclude Include="panel\user_message.h" />
     <ClInclude Include="qwr\error_popup.h" />

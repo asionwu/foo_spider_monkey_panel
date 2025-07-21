@@ -708,12 +708,6 @@
     <ClInclude Include="panel\js_panel_window.h">
       <Filter>panel</Filter>
     </ClInclude>
-    <ClInclude Include="panel\js_panel_window_cui.h">
-      <Filter>panel</Filter>
-    </ClInclude>
-    <ClInclude Include="panel\js_panel_window_dui.h">
-      <Filter>panel</Filter>
-    </ClInclude>
     <ClInclude Include="js_engine\heartbeat_window.h">
       <Filter>js_engine</Filter>
     </ClInclude>
