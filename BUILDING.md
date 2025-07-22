@@ -14,3 +14,5 @@ cd vcpkg
 
 Now browse inside the `foo_spider_monkey_panel` folder and open `src/foo_spider_monkey_panel.sln` in
 `Visual Studio 2022` and it should build.
+
+When building succeeds, check the `component` folder as the compiled `dll` is copied there.
