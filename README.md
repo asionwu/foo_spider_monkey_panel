@@ -14,20 +14,7 @@ window.GetColourDUI
 window.GetFontCUI
 window.GetFontDUI
 ```
-- Update project to use the `v143` toolset which means `Visual Studio 2022` is required to build.
-- 3rd party dependencies are now installed via [vcpkg](https://github.com/microsoft/vcpkg).
-
-To setup from a `Powershell` prompt:
-```
-git clone --recurse https://github.com/marc2k3/foo_spider_monkey_panel
-git clone https://github.com/microsoft/vcpkg
-cd vcpkg
-./bootstrap-vcpkg
-./vcpkg integrate install
-```
-
-Now browse inside the `foo_spider_monkey_panel` folder and open `src/foo_spider_monkey_panel.sln` in
-`Visual Studio 2022` and it should build.
+- Add [build](BUILDING.md) instructions.
 
 ## 1.6.2.25.06.21
 - Add utils.HTTPRequestAsync. See [web requests](web-requests.md).
