@@ -1,7 +1,7 @@
 #include <stdafx.h>
 #include "DownloadFileAsync.hpp"
+#include "FileHelper.hpp"
 
-#include <2K3/FileHelper.hpp>
 #include <events/event_dispatcher.h>
 #include <events/event_js_callback.h>
 
