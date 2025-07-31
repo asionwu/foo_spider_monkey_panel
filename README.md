@@ -4,6 +4,10 @@ requires at least `foobar2000` `2.0`.
 
 # Changelog
 
+## 1.6.2.25.07.31
+Update `utils.HTTPRequestAsync` to use a thread pool which limits concurrent
+requests.
+
 ## 1.6.2.25.07.22
 - The `type` values supplied to the following methods are now validated and will
 throw errors if invalid.
