@@ -1,7 +1,7 @@
 #pragma once
 #include <cpr/cpr.h>
 
-class HTTPRequestAsync
+class HTTPRequestAsync : public fb2k::threadEntry
 {
 public:
 	enum class Type
@@ -12,7 +12,7 @@ public:
 
 	HTTPRequestAsync(Type type, HWND wnd, uint32_t task_id, std::string_view url, std::string_view user_agent_or_headers, std::string_view body);
 
-	void run();
+	void run() final;
 
 private:
 	static bool is_supported_content_type(std::string_view content_type);

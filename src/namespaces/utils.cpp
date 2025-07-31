@@ -541,15 +541,9 @@ uint32_t Utils::HTTPRequestAsync(uint32_t type, const std::string& url, const st
 	qwr::QwrException::ExpectTrue(wnd, "Method called before fb2k was initialized completely");
 	qwr::QwrException::ExpectTrue(type <= 1, "Invalid type argument");
 
-	const auto type_enum = static_cast<::HTTPRequestAsync::Type>(type);
-	auto task = std::make_unique<::HTTPRequestAsync>(type_enum, wnd, ++task_id, url, user_agent_or_headers, body);
-
-	auto t = std::thread([task = std::move(task)]()
-		{
-			task->run();
-		});
-
-	t.detach();
+	const auto type_enum = static_cast<HTTPRequestAsync::Type>(type);
+	auto task = fb2k::service_new<::HTTPRequestAsync>(type_enum, wnd, ++task_id, url, user_agent_or_headers, body);
+	fb2k::cpuThreadPool::get()->runSingle(task);
 
 	return task_id;
 }
