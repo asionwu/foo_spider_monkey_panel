@@ -76,9 +76,6 @@ public:
 
 	/// @throw qwr::QwrException
 	void Save(stream_writer& writer, abort_callback& abort) const;
-
-	/// @throw qwr::QwrException
-	static void SaveDefault(stream_writer& writer, abort_callback& abort);
 };
 
 } // namespace smp::config
