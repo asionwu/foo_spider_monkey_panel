@@ -56,9 +56,7 @@ namespace smp::panel
 
 		static ui_element_config::ptr g_get_default_configuration()
 		{
-			ui_element_config_builder builder;
-			config::PanelSettings::SaveDefault(builder.m_stream, fb2k::noAbort);
-			return builder.finish(g_get_guid());
+			return ui_element_config::g_create_empty(g_get_guid());
 		}
 
 		static void g_get_name(pfc::string_base& out)
