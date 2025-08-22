@@ -25,8 +25,7 @@ enum class InternalSyncMessage : UINT
 enum class MiscMessage : UINT
 {
 	heartbeat = static_cast<int>(InternalSyncMessage::last_message) + 1,
-	key_down,
-	size_limit_changed
+	key_down
 };
 
 template <typename T>

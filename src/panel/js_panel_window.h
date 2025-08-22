@@ -77,6 +77,7 @@ public: // accessors
 	[[nodiscard]] PanelType GetPanelType() const;
 	virtual DWORD GetColour(const GUID& guid, uint32_t type = 0U) = 0;
 	virtual HFONT GetFont(const GUID& guid, uint32_t type = 0U) = 0;
+	virtual void NotifySizeLimitChanged() = 0;
 
 	void SetSettings_ScriptInfo(const std::string& scriptName, const std::string& scriptAuthor, const std::string& scriptVersion);
 	void SetSettings_PanelName(const std::string& panelName);
@@ -89,8 +90,6 @@ public: // accessors
 	[[nodiscard]] bool HasInternalDrag() const;
 
 protected:
-	virtual void notify_size_limit_changed(LPARAM lp) = 0;
-
 	LRESULT OnMessage(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 
 	void EditScript();

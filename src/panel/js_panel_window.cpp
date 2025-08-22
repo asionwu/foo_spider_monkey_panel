@@ -1324,7 +1324,7 @@ bool js_panel_window::LoadScript(bool isFirstLoad)
 
 	maxSize_ = { INT_MAX, INT_MAX };
 	minSize_ = { 0, 0 };
-	wnd_.PostMessage(static_cast<UINT>(MiscMessage::size_limit_changed), uie::size_limit_all, 0);
+	NotifySizeLimitChanged();
 
 	if (!pJsContainer_->Initialize())
 	{ // error reporting handled inside

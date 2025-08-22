@@ -1028,7 +1028,7 @@ void Window::put_MaxHeight(uint32_t height)
 	}
 
 	parentPanel_.MaxSize().y = height;
-	PostMessage(parentPanel_.GetHWND(), static_cast<UINT>(MiscMessage::size_limit_changed), uie::size_limit_maximum_height, 0);
+	parentPanel_.NotifySizeLimitChanged();
 }
 
 void Window::put_MaxWidth(uint32_t width)
@@ -1039,7 +1039,7 @@ void Window::put_MaxWidth(uint32_t width)
 	}
 
 	parentPanel_.MaxSize().x = width;
-	PostMessage(parentPanel_.GetHWND(), static_cast<UINT>(MiscMessage::size_limit_changed), uie::size_limit_maximum_width, 0);
+	parentPanel_.NotifySizeLimitChanged();
 }
 
 void Window::put_MinHeight(uint32_t height)
@@ -1050,7 +1050,7 @@ void Window::put_MinHeight(uint32_t height)
 	}
 
 	parentPanel_.MinSize().y = height;
-	PostMessage(parentPanel_.GetHWND(), static_cast<UINT>(MiscMessage::size_limit_changed), uie::size_limit_minimum_height, 0);
+	parentPanel_.NotifySizeLimitChanged();
 }
 
 void Window::put_MinWidth(uint32_t width)
@@ -1061,7 +1061,7 @@ void Window::put_MinWidth(uint32_t width)
 	}
 
 	parentPanel_.MinSize().x = width;
-	PostMessage(parentPanel_.GetHWND(), static_cast<UINT>(MiscMessage::size_limit_changed), uie::size_limit_minimum_width, 0);
+	parentPanel_.NotifySizeLimitChanged();
 }
 
 Window::DefineScriptOptions Window::ParseDefineScriptOptions(JS::HandleValue options)

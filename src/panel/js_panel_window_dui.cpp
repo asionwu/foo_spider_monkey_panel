@@ -1,10 +1,5 @@
 #include <stdafx.h>
-
 #include <panel/js_panel_window.h>
-
-#include <com_objects/drop_target_impl.h>
-#include <events/event_dispatcher.h>
-#include <events/event_js_callback.h>
 #include <utils/colour_helpers.h>
 
 #include <foobar2000/helpers/atl-misc.h>
@@ -26,7 +21,7 @@ namespace smp::panel
 			return uiCallback_->query_font_ex(guid);
 		}
 
-		void notify_size_limit_changed(LPARAM) final
+		void NotifySizeLimitChanged() final
 		{
 			uiCallback_->on_min_max_info_change();
 		}
@@ -73,18 +68,11 @@ namespace smp::panel
 			case WM_RBUTTONDOWN:
 			case WM_RBUTTONDBLCLK:
 			case WM_CONTEXTMENU:
-			{
 				if (uiCallback_->is_edit_mode_enabled())
 				{
 					return FALSE;
 				}
 				break;
-			}
-			case static_cast<UINT>(smp::MiscMessage::size_limit_changed):
-			{
-				notify_size_limit_changed(wp);
-				return FALSE;
-			}
 			}
 
 			lres = OnMessage(wnd, msg, wp, lp);

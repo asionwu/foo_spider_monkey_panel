@@ -1,11 +1,6 @@
 #include <stdafx.h>
-
-#include <com_objects/drop_target_impl.h>
-#include <events/event_dispatcher.h>
-#include <events/event_js_callback.h>
-#include <utils/colour_helpers.h>
-
 #include <panel/js_panel_window.h>
+#include <utils/colour_helpers.h>
 
 namespace smp::panel
 {
@@ -28,9 +23,9 @@ namespace smp::panel
 				return api->get_font(static_cast<cui::fonts::font_type_t>(type));
 		}
 
-		void notify_size_limit_changed(LPARAM lp) final
+		void NotifySizeLimitChanged() final
 		{
-			get_host()->on_size_limit_change(GetHWND(), lp);
+			get_host()->on_size_limit_change(GetHWND(), uie::size_limit_all);
 		}
 
 	public:
@@ -42,16 +37,9 @@ namespace smp::panel
 			{
 			case WM_SYSKEYDOWN:
 			case WM_KEYDOWN:
-			{
 				if (uie::window::g_process_keydown_keyboard_shortcuts(wp))
 					return 0;
 				break;
-			}
-			case static_cast<UINT>(smp::MiscMessage::size_limit_changed):
-			{
-				notify_size_limit_changed(wp);
-				return 0;
-			}
 			default:
 				break;
 			}
