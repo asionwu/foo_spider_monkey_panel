@@ -17,28 +17,30 @@ namespace smp::config::binary
 		pt_string = 3,
 	};
 
-	PanelSettings LoadSettings(stream_reader& reader, abort_callback& abort)
+	PanelSettings LoadSettings(stream_reader* reader, abort_callback& abort)
 	{
 		try
 		{
 			PanelSettings panelSettings;
 			PanelSettings_InMemory payload;
 
-			reader.skip_object(sizeof(false), abort); // skip "delay load"
+			reader->skip_object(sizeof(false), abort); // skip "delay load"
+			
 			panelSettings.id = [&] {
 				GUID guid;
-				reader.read_object_t(guid, abort);
+				reader->read_object_t(guid, abort);
 
 				const auto guidStr = utils::GuidToStr(guid);
 				return qwr::ToU8(guidStr);
 			}();
-			reader.read_object(&panelSettings.edgeStyle, sizeof(panelSettings.edgeStyle), abort);
+
+			reader->read_object(&panelSettings.edgeStyle, sizeof(panelSettings.edgeStyle), abort);
 			panelSettings.properties = LoadProperties(reader, abort);
-			reader.skip_object(sizeof(false), abort); // skip "disable before"
-			reader.read_object_t(payload.shouldGrabFocus, abort);
-			reader.skip_object(sizeof(WINDOWPLACEMENT), abort); // skip WINDOWPLACEMENT
-			payload.script = reader.read_string(abort).get_ptr();
-			reader.read_object_t(panelSettings.isPseudoTransparent, abort);
+			reader->skip_object(sizeof(false), abort); // skip "disable before"
+			reader->read_object_t(payload.shouldGrabFocus, abort);
+			reader->skip_object(sizeof(WINDOWPLACEMENT), abort); // skip WINDOWPLACEMENT
+			payload.script = reader->read_string(abort).get_ptr();
+			reader->read_object_t(panelSettings.isPseudoTransparent, abort);
 
 			panelSettings.payload = payload;
 
@@ -50,52 +52,41 @@ namespace smp::config::binary
 		}
 	}
 
-	PanelProperties LoadProperties(stream_reader& reader, abort_callback& abort)
+	PanelProperties LoadProperties(stream_reader* reader, abort_callback& abort)
 	{
 		try
 		{
 			PanelProperties properties;
 
-			uint32_t count;
-			reader.read_lendian_t(count, abort);
+			const auto count = reader->read_object_t<uint32_t>(abort);
 
-			for (auto i: ranges::views::indices(count))
+			for ([[maybe_unused]] const auto i : ranges::views::indices(count))
 			{
-				(void)i;
-
 				mozjs::SerializedJsValue serializedValue;
 
-				const std::string u8PropName = reader.read_string(abort).get_ptr();
-
-				uint32_t valueType;
-				reader.read_lendian_t(valueType, abort);
+				const std::string u8PropName = reader->read_string(abort).get_ptr();
+				const auto valueType = reader->read_object_t<uint32_t>(abort);
 
 				switch (static_cast<JsValueType>(valueType))
 				{
 				case JsValueType::pt_boolean:
 				{
-					bool value;
-					reader.read_lendian_t(value, abort);
-					serializedValue = value;
+					serializedValue = reader->read_object_t<bool>(abort);;
 					break;
 				}
 				case JsValueType::pt_int32:
 				{
-					int32_t value;
-					reader.read_lendian_t(value, abort);
-					serializedValue = value;
+					serializedValue = reader->read_object_t<int32_t>(abort);
 					break;
 				}
 				case JsValueType::pt_double:
 				{
-					double value;
-					reader.read_lendian_t(value, abort);
-					serializedValue = value;
+					serializedValue = reader->read_object_t<double>(abort);
 					break;
 				}
 				case JsValueType::pt_string:
 				{
-					serializedValue = reader.read_string(abort).get_ptr();
+					serializedValue = reader->read_string(abort).get_ptr();
 					break;
 				}
 				default:

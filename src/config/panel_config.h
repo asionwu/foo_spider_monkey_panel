@@ -26,7 +26,7 @@ public:
 	[[nodiscard]] std::string ToJson() const;
 
 	/// @throw qwr::QwrException
-	void Save(stream_writer& writer, abort_callback& abort) const;
+	void Save(stream_writer* writer, abort_callback& abort) const;
 };
 
 struct PanelSettings_InMemory
@@ -72,10 +72,10 @@ public:
 	void ResetToDefault();
 
 	/// @throw qwr::QwrException
-	[[nodiscard]] static PanelSettings Load(stream_reader& reader, size_t size, abort_callback& abort);
+	[[nodiscard]] static PanelSettings Load(stream_reader* reader, size_t size, abort_callback& abort);
 
 	/// @throw qwr::QwrException
-	void Save(stream_writer& writer, abort_callback& abort) const;
+	void Save(stream_writer* writer, abort_callback& abort) const;
 };
 
 } // namespace smp::config

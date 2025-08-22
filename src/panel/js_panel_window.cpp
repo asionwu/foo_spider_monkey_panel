@@ -113,7 +113,7 @@ void js_panel_window::ReloadScript()
 	}
 }
 
-void js_panel_window::LoadSettings(stream_reader& reader, t_size size, abort_callback& abort, bool reloadPanel)
+void js_panel_window::LoadSettings(stream_reader* reader, t_size size, abort_callback& abort, bool reloadPanel)
 {
 	const auto settings = [&] {
 		try
@@ -163,7 +163,7 @@ bool js_panel_window::UpdateSettings(const smp::config::PanelSettings& settings,
 	return true;
 }
 
-bool js_panel_window::SaveSettings(stream_writer& writer, abort_callback& abort) const
+bool js_panel_window::SaveSettings(stream_writer* writer, abort_callback& abort) const
 {
 	try
 	{

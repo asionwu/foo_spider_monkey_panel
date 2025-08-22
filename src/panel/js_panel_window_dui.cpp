@@ -87,7 +87,7 @@ namespace smp::panel
 		ui_element_config::ptr get_configuration() final
 		{
 			ui_element_config_builder builder;
-			SaveSettings(builder.m_stream, fb2k::noAbort);
+			SaveSettings(&builder.m_stream, fb2k::noAbort);
 			return builder.finish(g_get_guid());
 		}
 
@@ -106,7 +106,7 @@ namespace smp::panel
 			ui_element_config_parser parser(data);
 
 			// FIX: If window already created, DUI won't destroy it and create it again.
-			LoadSettings(parser.m_stream, parser.get_remaining(), fb2k::noAbort, !!GetHWND());
+			LoadSettings(&parser.m_stream, parser.get_remaining(), fb2k::noAbort, !!GetHWND());
 		}
 
 		void initialize_window(HWND parent)

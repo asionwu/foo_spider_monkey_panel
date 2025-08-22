@@ -27,7 +27,7 @@ namespace smp::config
 		return smp::config::json::SerializeProperties(*this);
 	}
 
-	void PanelProperties::Save(stream_writer& writer, abort_callback& abort) const
+	void PanelProperties::Save(stream_writer* writer, abort_callback& abort) const
 	{
 		smp::config::json::SaveProperties(writer, abort, *this);
 	}
@@ -61,7 +61,7 @@ namespace smp::config
 		}();
 	}
 
-	PanelSettings PanelSettings::Load(stream_reader& reader, size_t size, abort_callback& abort)
+	PanelSettings PanelSettings::Load(stream_reader* reader, size_t size, abort_callback& abort)
 	{
 		if (size < sizeof(SettingsType))
 		{
@@ -70,7 +70,7 @@ namespace smp::config
 
 		try
 		{
-			const auto ver = reader.read_object_t<uint32_t>(abort);
+			const auto ver = reader->read_object_t<uint32_t>(abort);
 
 			switch (static_cast<SettingsType>(ver))
 			{
@@ -88,9 +88,9 @@ namespace smp::config
 		}
 	}
 
-	void PanelSettings::Save(stream_writer& writer, abort_callback& abort) const
+	void PanelSettings::Save(stream_writer* writer, abort_callback& abort) const
 	{
-		writer.write_object_t(static_cast<uint32_t>(SettingsType::Json), abort);
+		writer->write_object_t(static_cast<uint32_t>(SettingsType::Json), abort);
 		smp::config::json::SaveSettings(writer, abort, *this);
 	}
 }

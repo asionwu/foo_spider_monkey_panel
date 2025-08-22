@@ -134,19 +134,14 @@ config::PanelProperties DeserializePropertiesFromObject(const JSON& jsonMain)
 namespace smp::config::json
 {
 
-PanelSettings LoadSettings(stream_reader& reader, abort_callback& abort)
+PanelSettings LoadSettings(stream_reader* reader, abort_callback& abort)
 {
 	namespace fs = std::filesystem;
 
 	try
 	{
 		PanelSettings panelSettings;
-
-		const auto jsonMain = JSON::parse(reader.read_string(abort).get_ptr());
-		if (!jsonMain.is_object())
-		{
-			throw qwr::QwrException("Corrupted serialized settings: not a JSON object");
-		}
+		const auto jsonMain = JSON::parse(reader->read_string(abort).get_ptr());
 
 		if (jsonMain.at("version").get<std::string>() != kSettingsJsonConfigVersion
 			 || jsonMain.at("id").get<std::string>() != kSettingsJsonConfigId)
@@ -239,7 +234,7 @@ PanelSettings LoadSettings(stream_reader& reader, abort_callback& abort)
 	}
 }
 
-void SaveSettings(stream_writer& writer, abort_callback& abort, const PanelSettings& settings)
+void SaveSettings(stream_writer* writer, abort_callback& abort, const PanelSettings& settings)
 {
 	namespace fs = std::filesystem;
 
@@ -311,8 +306,7 @@ void SaveSettings(stream_writer& writer, abort_callback& abort, const PanelSetti
 			{
 				static_assert(qwr::always_false_v<T>, "non-exhaustive visitor!");
 			}
-		},
-											settings.payload);
+		}, settings.payload);
 
 		jsonMain.push_back({ "scriptType", static_cast<uint8_t>(scriptType) });
 		jsonMain.push_back({ "payload", jsonPayload });
@@ -320,7 +314,7 @@ void SaveSettings(stream_writer& writer, abort_callback& abort, const PanelSetti
 		jsonMain.push_back({ "edgeStyle", static_cast<uint8_t>(settings.edgeStyle) });
 		jsonMain.push_back({ "isPseudoTransparent", settings.isPseudoTransparent });
 
-		writer.write_string(jsonMain.dump(2), abort);
+		writer->write_string(jsonMain.dump(2), abort);
 	}
 	catch (const JSON::exception& e)
 	{
@@ -336,11 +330,11 @@ void SaveSettings(stream_writer& writer, abort_callback& abort, const PanelSetti
 	}
 }
 
-PanelProperties LoadProperties(stream_reader& reader, abort_callback& abort)
+PanelProperties LoadProperties(stream_reader* reader, abort_callback& abort)
 {
 	try
 	{
-		return DeserializeProperties(reader.read_string(abort).get_ptr());
+		return DeserializeProperties(reader->read_string(abort).get_ptr());
 	}
 	catch (const pfc::exception& e)
 	{
@@ -348,11 +342,11 @@ PanelProperties LoadProperties(stream_reader& reader, abort_callback& abort)
 	}
 }
 
-void SaveProperties(stream_writer& writer, abort_callback& abort, const PanelProperties& properties)
+void SaveProperties(stream_writer* writer, abort_callback& abort, const PanelProperties& properties)
 {
 	try
 	{
-		writer.write_string(SerializeProperties(properties), abort);
+		writer->write_string(SerializeProperties(properties), abort);
 	}
 	catch (const pfc::exception& e)
 	{

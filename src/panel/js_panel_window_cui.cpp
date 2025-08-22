@@ -80,7 +80,7 @@ namespace smp::panel
 
 		void get_config(stream_writer* writer, abort_callback& abort) const final
 		{
-			SaveSettings(*writer, abort);
+			SaveSettings(writer, abort);
 		}
 
 		void get_name(pfc::string_base& out) const final
@@ -88,9 +88,9 @@ namespace smp::panel
 			out = SMP_NAME;
 		}
 
-		void set_config(stream_reader* reader, t_size size, abort_callback& abort)
+		void set_config(stream_reader* reader, t_size size, abort_callback& abort) final
 		{
-			LoadSettings(*reader, size, abort, false);
+			LoadSettings(reader, size, abort, false);
 		}
 
 		uie::container_window_v3_config get_window_config() final
