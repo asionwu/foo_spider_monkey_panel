@@ -2,8 +2,10 @@
 
 namespace smp
 {
+	static std::string LoadStringResource(int resourceId)
+	{
+		auto puRes = uLoadResource(core_api::get_my_instance(), uMAKEINTRESOURCE(resourceId), "TEXT");
 
-[[nodiscard]] std::optional<std::string>
-LoadStringResource(int resourceId, const char* resourceType);
-
-} // namespace smp
+		return { static_cast<const char*>(puRes->GetPointer()), puRes->GetSize() };
+	}
+}

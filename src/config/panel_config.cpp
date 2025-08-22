@@ -6,7 +6,7 @@
 #include <config/panel_config_json.h>
 #include <resources/resource.h>
 #include <utils/guid_helpers.h>
-
+#include <utils/resource_helpers.h>
 #include <qwr/string_helpers.h>
 
 namespace smp::config
@@ -34,15 +34,7 @@ namespace smp::config
 
 	std::string PanelSettings_InMemory::GetDefaultScript()
 	{
-		puResource puRes = uLoadResource(core_api::get_my_instance(), uMAKEINTRESOURCE(IDR_DEFAULT_SCRIPT), "SCRIPT");
-		if (puRes)
-		{
-			return std::string{ static_cast<const char*>(puRes->GetPointer()), puRes->GetSize() };
-		}
-		else
-		{
-			return std::string{};
-		}
+		return smp::LoadStringResource(IDR_DEFAULT_SCRIPT);
 	}
 
 	PanelSettings::PanelSettings()

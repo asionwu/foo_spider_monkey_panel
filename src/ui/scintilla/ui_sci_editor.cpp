@@ -474,8 +474,8 @@ void CScriptEditorCtrl::ReadAPI()
 		}
 	};
 
-	readApi(LoadStringResource(IDR_SCINTILLA_JS_API, "Script").value_or(""));
-	readApi(LoadStringResource(IDR_SCINTILLA_INTERFACE_API, "Script").value_or(""));
+	readApi(LoadStringResource(IDR_SCINTILLA_JS_API));
+	readApi(LoadStringResource(IDR_SCINTILLA_INTERFACE_API));
 
 	const auto propvalRet = GetPropertyExpanded_Opt("api.extra");
 	if (!propvalRet || propvalRet->empty())

@@ -313,9 +313,6 @@
     <ClCompile Include="fb2k\mainmenu_dynamic.cpp">
       <Filter>fb2k</Filter>
     </ClCompile>
-    <ClCompile Include="utils\resource_helpers.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="com_utils\com_destruction_handler.cpp">
       <Filter>com_utils</Filter>
     </ClCompile>

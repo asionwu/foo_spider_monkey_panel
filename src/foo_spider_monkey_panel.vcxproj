@@ -239,7 +239,6 @@ copy /Y "%mozjs_dir%nspr4.dll" "%component_path%"</Command>
     <ClCompile Include="utils\logging.cpp" />
     <ClCompile Include="utils\menu_helpers.cpp" />
     <ClCompile Include="utils\path_helpers.cpp" />
-    <ClCompile Include="utils\resource_helpers.cpp" />
     <ClCompile Include="utils\stackblur.cpp" />
     <ClCompile Include="utils\text_helpers.cpp" />
     <ClCompile Include="utils\thread_pool_instance.cpp" />

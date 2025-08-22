@@ -177,18 +177,16 @@ void UpdatePackages()
 			ForceRemoveDirContents(packageToUpdateDir);
 			fs::create_directories(packageToUpdateDir);
 
-			const auto restorationScriptOpt = LoadStringResource(IDR_RECOVERY_PACKAGE_SCRIPT, "Script");
-			assert(restorationScriptOpt);
-			const auto restorationJsonOpt = LoadStringResource(IDR_RECOVERY_PACKAGE_JSON, "Script");
-			assert(restorationJsonOpt);
+			const auto restorationScript = LoadStringResource(IDR_RECOVERY_PACKAGE_SCRIPT);
+			const auto restorationJson = LoadStringResource(IDR_RECOVERY_PACKAGE_JSON);
 
-			auto j = JSON::parse(*restorationJsonOpt);
+			auto j = JSON::parse(restorationJson);
 			j["id"] = packageId;
 
 			const auto main_file = packageToUpdateDir / config::GetRelativePathToMainFile();
 			const auto package_json = packageToUpdateDir / "package.json";
 
-			TextFile(main_file.native()).write(*restorationScriptOpt);
+			TextFile(main_file.native()).write(restorationScript);
 			TextFile(package_json.native()).write(j.dump(2));
 
 			qwr::ReportErrorWithPopup(SMP_UNDERSCORE_NAME,
