@@ -1,3 +1,9 @@
+Original repository: https://github.com/TheQwertiest/foo_spider_monkey_panel
+
+Original author: https://github.com/TheQwertiest
+
+Docs: https://theqwertiest.github.io/foo_spider_monkey_panel/
+
 # Requirements
 Because new methods from the `foobar2000` `SDK` are being used, this component
 requires at least `foobar2000` `2.0`.
