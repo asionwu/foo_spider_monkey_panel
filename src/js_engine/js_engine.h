@@ -28,48 +28,48 @@ public:
 	JsEngine(const JsEngine&) = delete;
 	JsEngine& operator=(const JsEngine&) = delete;
 
-	static [[nodiscard]] JsEngine& GetInstance();
-	void PrepareForExit();
+	static [[nodiscard]] JsEngine& GetInstance() noexcept;
+	void PrepareForExit() noexcept;
 
 public: // methods accessed by JsContainer
-	[[nodiscard]] bool RegisterContainer(JsContainer& jsContainer);
-	void UnregisterContainer(JsContainer& jsContainer);
+	[[nodiscard]] bool RegisterContainer(JsContainer& jsContainer) noexcept;
+	void UnregisterContainer(JsContainer& jsContainer) noexcept;
 
-	void MaybeRunJobs();
+	void MaybeRunJobs() noexcept;
 
-	void OnJsActionStart(JsContainer& jsContainer);
-	void OnJsActionEnd(JsContainer& jsContainer);
+	void OnJsActionStart(JsContainer& jsContainer) noexcept;
+	void OnJsActionEnd(JsContainer& jsContainer) noexcept;
 
 public: // methods accessed by js objects
-	[[nodiscard]] JsGc& GetGcEngine();
-	[[nodiscard]] const JsGc& GetGcEngine() const;
-	[[nodiscard]] JsInternalGlobal& GetInternalGlobal();
+	[[nodiscard]] JsGc& GetGcEngine() noexcept;
+	[[nodiscard]] const JsGc& GetGcEngine() const noexcept;
+	[[nodiscard]] JsInternalGlobal& GetInternalGlobal() noexcept;
 
 public: // methods accessed by other internals
-	void OnHeartbeat();
-	[[nodiscard]] bool OnInterrupt();
+	void OnHeartbeat() noexcept;
+	[[nodiscard]] bool OnInterrupt() noexcept;
 
 private:
 	JsEngine();
 
 private:
-	bool Initialize();
-	void Finalize();
+	bool Initialize() noexcept;
+	void Finalize() noexcept;
 
 	/// @throw qwr::QwrException
-	void StartHeartbeatThread();
-	void StopHeartbeatThread();
+	void StartHeartbeatThread() noexcept;
+	void StopHeartbeatThread() noexcept;
 
-	static bool InterruptHandler(JSContext* cx);
+	static bool InterruptHandler(JSContext* cx) noexcept;
 
 	static void RejectedPromiseHandler(
 		JSContext* cx,
 		bool mutedErrors,
 		JS::HandleObject promise,
 		JS::PromiseRejectionHandlingState state,
-		void* data);
+		void* data) noexcept;
 
-	void ReportOomError();
+	void ReportOomError() noexcept;
 
 private:
 	JSContext* pJsCtx_ = nullptr;

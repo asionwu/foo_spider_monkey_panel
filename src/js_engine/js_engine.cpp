@@ -36,7 +36,7 @@ constexpr size_t kMaxStackLimit = 1024LL * 1024 / 2;
 namespace
 {
 
-void ReportException(const std::string& errorText)
+void ReportException(const std::string& errorText) noexcept
 {
 	const std::string errorTextPadded = [&errorText]() {
 		std::string text = "Critical JS engine error: " SMP_NAME_WITH_VERSION;
@@ -67,13 +67,13 @@ JsEngine::~JsEngine()
 	assert(!isInitialized_);
 }
 
-JsEngine& JsEngine::GetInstance()
+JsEngine& JsEngine::GetInstance() noexcept
 {
 	static JsEngine je;
 	return je;
 }
 
-void JsEngine::PrepareForExit()
+void JsEngine::PrepareForExit() noexcept
 {
 	shouldShutdown_ = true;
 	if (registeredContainers_.empty())
@@ -82,7 +82,7 @@ void JsEngine::PrepareForExit()
 	}
 }
 
-bool JsEngine::RegisterContainer(JsContainer& jsContainer)
+bool JsEngine::RegisterContainer(JsContainer& jsContainer) noexcept
 {
 	if (registeredContainers_.empty() && !Initialize())
 	{
@@ -99,7 +99,7 @@ bool JsEngine::RegisterContainer(JsContainer& jsContainer)
 	return true;
 }
 
-void JsEngine::UnregisterContainer(JsContainer& jsContainer)
+void JsEngine::UnregisterContainer(JsContainer& jsContainer) noexcept
 {
 	if (auto it = registeredContainers_.find(&jsContainer);
 		 it != registeredContainers_.end())
@@ -116,7 +116,7 @@ void JsEngine::UnregisterContainer(JsContainer& jsContainer)
 	}
 }
 
-void JsEngine::MaybeRunJobs()
+void JsEngine::MaybeRunJobs() noexcept
 {
 	if (!isInitialized_)
 	{
@@ -171,33 +171,33 @@ void JsEngine::MaybeRunJobs()
 	}
 }
 
-void JsEngine::OnJsActionStart(JsContainer& jsContainer)
+void JsEngine::OnJsActionStart(JsContainer& jsContainer) noexcept
 {
 	jsMonitor_.OnJsActionStart(jsContainer);
 }
 
-void JsEngine::OnJsActionEnd(JsContainer& jsContainer)
+void JsEngine::OnJsActionEnd(JsContainer& jsContainer) noexcept
 {
 	jsMonitor_.OnJsActionEnd(jsContainer);
 }
 
-JsGc& JsEngine::GetGcEngine()
+JsGc& JsEngine::GetGcEngine() noexcept
 {
 	return jsGc_;
 }
 
-const JsGc& JsEngine::GetGcEngine() const
+const JsGc& JsEngine::GetGcEngine() const noexcept
 {
 	return jsGc_;
 }
 
-JsInternalGlobal& JsEngine::GetInternalGlobal()
+JsInternalGlobal& JsEngine::GetInternalGlobal() noexcept
 {
 	assert(internalGlobal_);
 	return *internalGlobal_;
 }
 
-void JsEngine::OnHeartbeat()
+void JsEngine::OnHeartbeat() noexcept
 {
 	if (!isInitialized_ || isBeating_ || shouldStopHeartbeatThread_)
 	{
@@ -216,7 +216,7 @@ void JsEngine::OnHeartbeat()
 	isBeating_ = false;
 }
 
-bool JsEngine::Initialize()
+bool JsEngine::Initialize() noexcept
 {
 	if (isInitialized_)
 	{
@@ -283,7 +283,7 @@ bool JsEngine::Initialize()
 	return true;
 }
 
-void JsEngine::Finalize()
+void JsEngine::Finalize() noexcept
 {
 	if (pJsCtx_)
 	{
@@ -310,7 +310,7 @@ void JsEngine::Finalize()
 	isInitialized_ = false;
 }
 
-void JsEngine::StartHeartbeatThread()
+void JsEngine::StartHeartbeatThread() noexcept
 {
 	if (!heartbeatWindow_)
 	{
@@ -330,7 +330,7 @@ void JsEngine::StartHeartbeatThread()
 	});
 }
 
-void JsEngine::StopHeartbeatThread()
+void JsEngine::StopHeartbeatThread() noexcept
 {
 	if (heartbeatThread_.joinable())
 	{
@@ -339,17 +339,17 @@ void JsEngine::StopHeartbeatThread()
 	}
 }
 
-bool JsEngine::InterruptHandler(JSContext*)
+bool JsEngine::InterruptHandler(JSContext*) noexcept
 {
 	return JsEngine::GetInstance().OnInterrupt();
 }
 
-bool JsEngine::OnInterrupt()
+bool JsEngine::OnInterrupt() noexcept
 {
 	return jsMonitor_.OnInterrupt();
 }
 
-void JsEngine::RejectedPromiseHandler(JSContext*, bool mutedErrors, JS::HandleObject promise, JS::PromiseRejectionHandlingState state, void* data)
+void JsEngine::RejectedPromiseHandler(JSContext*, bool mutedErrors, JS::HandleObject promise, JS::PromiseRejectionHandlingState state, void* data) noexcept
 {
 	JsEngine& self = *reinterpret_cast<JsEngine*>(data);
 
@@ -373,7 +373,7 @@ void JsEngine::RejectedPromiseHandler(JSContext*, bool mutedErrors, JS::HandleOb
 	}
 }
 
-void JsEngine::ReportOomError()
+void JsEngine::ReportOomError() noexcept
 {
 	for (auto& [hWnd, jsContainer]: registeredContainers_)
 	{

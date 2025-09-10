@@ -27,7 +27,7 @@ namespace
 
 	class InitStageCallback : public init_stage_callback
 	{
-		void on_init_stage(t_uint32 stage) override
+		void on_init_stage(t_uint32 stage) noexcept final
 		{
 			if (stage == init_stages::before_config_read)
 			{
@@ -64,7 +64,7 @@ namespace
 		}
 	};
 
-	void on_quit()
+	void on_quit() noexcept
 	{
 		mozjs::JsEngine::GetInstance().PrepareForExit();
 		smp::EventDispatcher::Get().NotifyAllAboutExit();

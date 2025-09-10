@@ -8,13 +8,13 @@
 namespace smp
 {
 
-EventDispatcher& EventDispatcher::Get()
+EventDispatcher& EventDispatcher::Get() noexcept
 {
 	static EventDispatcher em;
 	return em;
 }
 
-void EventDispatcher::AddWindow(HWND hWnd, std::shared_ptr<PanelTarget> pTarget)
+void EventDispatcher::AddWindow(HWND hWnd, std::shared_ptr<PanelTarget> pTarget) noexcept
 {
 	std::unique_lock ul(taskControllerMapMutex_);
 
@@ -23,7 +23,7 @@ void EventDispatcher::AddWindow(HWND hWnd, std::shared_ptr<PanelTarget> pTarget)
 	nextEventMsgStatusMap_.try_emplace(hWnd, true);
 }
 
-void EventDispatcher::RemoveWindow(HWND hWnd)
+void EventDispatcher::RemoveWindow(HWND hWnd) noexcept
 {
 	std::unique_lock ul(taskControllerMapMutex_);
 
@@ -32,7 +32,7 @@ void EventDispatcher::RemoveWindow(HWND hWnd)
 	nextEventMsgStatusMap_.erase(hWnd);
 }
 
-void EventDispatcher::NotifyAllAboutExit()
+void EventDispatcher::NotifyAllAboutExit() noexcept
 {
 	std::vector<HWND> hWnds;
 	hWnds.reserve(taskControllerMap_.size());
@@ -51,12 +51,12 @@ void EventDispatcher::NotifyAllAboutExit()
 	}
 }
 
-bool EventDispatcher::IsRequestEventMessage(UINT msg)
+bool EventDispatcher::IsRequestEventMessage(UINT msg) noexcept
 {
 	return (msg == static_cast<UINT>(InternalSyncMessage::run_next_event));
 }
 
-bool EventDispatcher::ProcessNextEvent(HWND hWnd)
+bool EventDispatcher::ProcessNextEvent(HWND hWnd) noexcept
 {
 	auto pTaskController = [&] {
 		std::unique_lock ul(taskControllerMapMutex_);
@@ -72,7 +72,7 @@ bool EventDispatcher::ProcessNextEvent(HWND hWnd)
 	return pTaskController->ExecuteNextTask();
 }
 
-void EventDispatcher::RequestNextEvent(HWND hWnd)
+void EventDispatcher::RequestNextEvent(HWND hWnd) noexcept
 {
 	std::scoped_lock sl(taskControllerMapMutex_);
 
@@ -85,7 +85,7 @@ void EventDispatcher::RequestNextEvent(HWND hWnd)
 	RequestNextEventImpl(hWnd, *taskControllerIt->second, sl);
 }
 
-void EventDispatcher::RequestNextEventImpl(HWND hWnd, TaskController& taskController, std::scoped_lock<std::mutex>& proof)
+void EventDispatcher::RequestNextEventImpl(HWND hWnd, TaskController& taskController, std::scoped_lock<std::mutex>& proof) noexcept
 {
 	if (!taskController.HasTasks())
 	{
@@ -110,7 +110,7 @@ void EventDispatcher::RequestNextEventImpl(HWND hWnd, TaskController& taskContro
 	}
 }
 
-void EventDispatcher::OnRequestEventMessageReceived(HWND hWnd)
+void EventDispatcher::OnRequestEventMessageReceived(HWND hWnd) noexcept
 {
 	std::scoped_lock sl(taskControllerMapMutex_);
 
@@ -123,7 +123,7 @@ void EventDispatcher::OnRequestEventMessageReceived(HWND hWnd)
 	isWaitingForMsgIt->second = true;
 }
 
-void EventDispatcher::PutRunnable(HWND hWnd, std::shared_ptr<Runnable> pRunnable, EventPriority priority)
+void EventDispatcher::PutRunnable(HWND hWnd, std::shared_ptr<Runnable> pRunnable, EventPriority priority) noexcept
 {
 	std::scoped_lock sl(taskControllerMapMutex_);
 
@@ -139,7 +139,7 @@ void EventDispatcher::PutRunnable(HWND hWnd, std::shared_ptr<Runnable> pRunnable
 	RequestNextEventImpl(hWnd, *pTaskController, sl);
 }
 
-void EventDispatcher::PutEvent(HWND hWnd, std::unique_ptr<EventBase> pEvent, EventPriority priority)
+void EventDispatcher::PutEvent(HWND hWnd, std::unique_ptr<EventBase> pEvent, EventPriority priority) noexcept
 {
 	std::scoped_lock sl(taskControllerMapMutex_);
 
@@ -156,7 +156,7 @@ void EventDispatcher::PutEvent(HWND hWnd, std::unique_ptr<EventBase> pEvent, Eve
 	RequestNextEventImpl(hWnd, *pTaskController, sl);
 }
 
-void EventDispatcher::PutEventToAll(std::unique_ptr<EventBase> pEvent, EventPriority priority)
+void EventDispatcher::PutEventToAll(std::unique_ptr<EventBase> pEvent, EventPriority priority) noexcept
 {
 	std::scoped_lock sl(taskControllerMapMutex_);
 
@@ -181,7 +181,7 @@ void EventDispatcher::PutEventToAll(std::unique_ptr<EventBase> pEvent, EventPrio
 	}
 }
 
-void EventDispatcher::PutEventToOthers(HWND hWnd, std::unique_ptr<EventBase> pEvent, EventPriority priority)
+void EventDispatcher::PutEventToOthers(HWND hWnd, std::unique_ptr<EventBase> pEvent, EventPriority priority) noexcept
 {
 	std::scoped_lock sl(taskControllerMapMutex_);
 
@@ -206,7 +206,7 @@ void EventDispatcher::PutEventToOthers(HWND hWnd, std::unique_ptr<EventBase> pEv
 	}
 }
 
-void EventDispatcher::NotifyOthers(HWND hWnd, std::unique_ptr<EventBase> pEvent)
+void EventDispatcher::NotifyOthers(HWND hWnd, std::unique_ptr<EventBase> pEvent) noexcept
 {
 	std::vector<std::pair<HWND, std::unique_ptr<EventBase>>> hWndToEvent;
 	hWndToEvent.reserve(taskControllerMap_.size());
