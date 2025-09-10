@@ -552,7 +552,7 @@ function _thumbs() {
 			})
 			.take(this.properties.limit.value)
 			.forEach((item) => {
-				utils.DownloadFileAsync(item.url, item.filename, true);
+				utils.DownloadFileAsync(item.url, item.filename);
 			});
 	}
 
