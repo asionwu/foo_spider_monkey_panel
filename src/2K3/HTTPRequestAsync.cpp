@@ -13,13 +13,13 @@ HTTPRequestAsync::HTTPRequestAsync(Type type, HWND wnd, uint32_t task_id, std::s
 	, m_body(body) {}
 
 #pragma region static
-bool HTTPRequestAsync::is_supported_content_type(std::string_view content_type)
+bool HTTPRequestAsync::is_supported_content_type(std::string_view content_type) noexcept
 {
 	return content_type.contains("text") || content_type.contains("json") || content_type.contains("xml");
 }
 #pragma endregion
 
-cpr::Response HTTPRequestAsync::get_response()
+cpr::Response HTTPRequestAsync::get_response() noexcept
 {
 	m_session.SetUrl(m_url);
 	add_headers();
@@ -31,7 +31,7 @@ cpr::Response HTTPRequestAsync::get_response()
 	return m_session.Post();
 }
 
-void HTTPRequestAsync::add_headers()
+void HTTPRequestAsync::add_headers() noexcept
 {
 	if (m_user_agent_or_headers.empty())
 	{
@@ -67,7 +67,7 @@ void HTTPRequestAsync::add_headers()
 	}
 }
 
-void HTTPRequestAsync::run()
+void HTTPRequestAsync::run() noexcept
 {
 	bool success{};
 	std::string response_text;

@@ -13,14 +13,14 @@ public:
 
 	Attach(Action action, metadb_handle_list_cref handles, const AlbumArtStatic::Type& type = {}, const album_art_data_ptr& data = {});
 
-	static void from_path(metadb_handle_list_cref handles, size_t type_id, std::wstring_view path);
-	static void remove_id(metadb_handle_list_cref handles, size_t type_id);
-	static void remove_all(metadb_handle_list_cref handles);
+	static void from_path(metadb_handle_list_cref handles, size_t type_id, std::wstring_view path) noexcept;
+	static void remove_id(metadb_handle_list_cref handles, size_t type_id) noexcept;
+	static void remove_all(metadb_handle_list_cref handles) noexcept;
 
-	void run(threaded_process_status& status, abort_callback& abort) final;
+	void run(threaded_process_status& status, abort_callback& abort) noexcept final;
 
 private:
-	static void init(threaded_process_callback::ptr callback);
+	static void init(threaded_process_callback::ptr callback) noexcept;
 
 	Action m_action{};
 	AlbumArtStatic::Type m_type;

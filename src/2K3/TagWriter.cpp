@@ -7,7 +7,7 @@
 
 TagWriter::TagWriter(metadb_handle_list_cref handles) : m_handles(handles) {}
 
-void TagWriter::from_json_array(JSON& arr)
+void TagWriter::from_json_array(JSON& arr) noexcept
 {
 	std::vector<file_info_impl> infos(m_handles.get_count());
 
@@ -35,7 +35,7 @@ void TagWriter::from_json_array(JSON& arr)
 	metadb_io_v2::get()->update_info_async(m_handles, filter, core_api::get_main_window(), metadb_io_v2::op_flag_silent, nullptr);
 }
 
-void TagWriter::from_json_object(JSON& obj)
+void TagWriter::from_json_object(JSON& obj) noexcept
 {
 	FileInfoFilter::Tags tags;
 

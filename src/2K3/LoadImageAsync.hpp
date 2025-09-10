@@ -12,7 +12,7 @@ public:
 		, m_path(path)
 		, m_task_id(task_id) {}
 
-	void run() final
+	void run() noexcept final
 	{
 		auto bitmap = FileHelper(m_path).load_image();
 

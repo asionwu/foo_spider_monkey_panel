@@ -6,7 +6,7 @@
 TextFile::TextFile(std::wstring_view path) : m_path(path) {}
 
 #pragma region static
-uint32_t TextFile::guess_codepage(std::string_view content)
+uint32_t TextFile::guess_codepage(std::string_view content) noexcept
 {
 	if (content.empty())
 		return 0;
@@ -34,7 +34,7 @@ uint32_t TextFile::guess_codepage(std::string_view content)
 }
 #pragma endregion
 
-bool TextFile::write(std::string_view content, bool write_bom)
+bool TextFile::write(std::string_view content, bool write_bom) noexcept
 {
 	auto f = std::ofstream(m_path, std::ios::binary);
 
@@ -51,7 +51,7 @@ bool TextFile::write(std::string_view content, bool write_bom)
 }
 
 
-std::string TextFile::read()
+std::string TextFile::read() noexcept
 {
 	auto f = std::ifstream(m_path);
 
@@ -74,12 +74,12 @@ std::string TextFile::read()
 	return str;
 }
 
-uint32_t TextFile::guess_codepage()
+uint32_t TextFile::guess_codepage() noexcept
 {
 	return guess_codepage(read());
 }
 
-void TextFile::read_wide(uint32_t codepage, std::wstring& content)
+void TextFile::read_wide(uint32_t codepage, std::wstring& content) noexcept
 {
 	const auto result = wil::try_open_file(m_path.c_str());
 

@@ -17,7 +17,7 @@ ThreadPool::~ThreadPool()
 	assert(tasks_.empty());
 }
 
-void ThreadPool::Finalize()
+void ThreadPool::Finalize() noexcept
 {
 	assert(core_api::is_main_thread());
 
@@ -44,12 +44,12 @@ void ThreadPool::Finalize()
 	}
 }
 
-void ThreadPool::AddThread()
+void ThreadPool::AddThread() noexcept
 {
 	threads_.emplace_back(std::make_unique<std::thread>([&] { ThreadProc(); }));
 }
 
-void ThreadPool::ThreadProc()
+void ThreadPool::ThreadProc() noexcept
 {
 	++idleThreadCount_;
 	auto scope = wil::scope_exit([&idleThreadsCount = idleThreadCount_]() {

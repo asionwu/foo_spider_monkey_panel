@@ -12,13 +12,13 @@ public:
 
 	HTTPRequestAsync(Type type, HWND wnd, uint32_t task_id, std::string_view url, std::string_view user_agent_or_headers, std::string_view body);
 
-	void run() final;
+	void run() noexcept final;
 
 private:
-	static bool is_supported_content_type(std::string_view content_type);
+	static bool is_supported_content_type(std::string_view content_type) noexcept;
 	
-	cpr::Response get_response();
-	void add_headers();
+	cpr::Response get_response() noexcept;
+	void add_headers() noexcept;
 
 	HWND m_wnd;
 	Type m_type{};

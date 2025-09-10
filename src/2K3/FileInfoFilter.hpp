@@ -13,7 +13,7 @@ public:
 
 	FileInfoFilter(const Tags& tags) : m_tags(tags) {}
 
-	bool apply_filter(metadb_handle_ptr, t_filestats, file_info& info) final
+	bool apply_filter(metadb_handle_ptr, t_filestats, file_info& info) noexcept final
 	{
 		for (const auto& [name, values] : m_tags)
 		{

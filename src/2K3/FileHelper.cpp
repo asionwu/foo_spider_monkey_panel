@@ -8,14 +8,14 @@ namespace fs = std::filesystem;
 FileHelper::FileHelper(std::wstring_view path) : m_path(path) {}
 
 #pragma region static
-bool FileHelper::rename(std::wstring_view from, std::wstring_view to)
+bool FileHelper::rename(std::wstring_view from, std::wstring_view to) noexcept
 {
 	std::error_code ec;
 	fs::rename(from, to, ec);
 	return ec.value() == 0;
 }
 
-fs::copy_options FileHelper::create_options(bool overwrite, bool recur)
+fs::copy_options FileHelper::create_options(bool overwrite, bool recur) noexcept
 {
 	fs::copy_options options{};
 
@@ -32,7 +32,7 @@ fs::copy_options FileHelper::create_options(bool overwrite, bool recur)
 	return options;
 }
 
-uint32_t FileHelper::get_stream_size(IStream* stream)
+uint32_t FileHelper::get_stream_size(IStream* stream) noexcept
 {
 	STATSTG stats{};
 
@@ -43,14 +43,14 @@ uint32_t FileHelper::get_stream_size(IStream* stream)
 }
 #pragma endregion
 
-HRESULT FileHelper::read(wil::com_ptr<IStream>& stream)
+HRESULT FileHelper::read(wil::com_ptr<IStream>& stream) noexcept
 {
 	RETURN_IF_FAILED(SHCreateStreamOnFileEx(m_path.c_str(), STGM_READ | STGM_SHARE_DENY_WRITE, GENERIC_READ, FALSE, nullptr, &stream));
 	RETURN_HR_IF(E_INVALIDARG, get_stream_size(stream.get()) > kMaxStreamSize);
 	return S_OK;
 }
 
-bool FileHelper::copy_file(std::wstring_view to, bool overwrite)
+bool FileHelper::copy_file(std::wstring_view to, bool overwrite) noexcept
 {
 	if (!is_file())
 		return false;
@@ -60,7 +60,7 @@ bool FileHelper::copy_file(std::wstring_view to, bool overwrite)
 	return fs::copy_file(m_path, to, options, ec);
 }
 
-bool FileHelper::copy_folder(std::wstring_view to, bool overwrite, bool recur)
+bool FileHelper::copy_folder(std::wstring_view to, bool overwrite, bool recur) noexcept
 {
 	if (!is_folder())
 		return false;
@@ -71,7 +71,7 @@ bool FileHelper::copy_folder(std::wstring_view to, bool overwrite, bool recur)
 	return ec.value() == 0;
 }
 
-bool FileHelper::create_folder()
+bool FileHelper::create_folder() noexcept
 {
 	std::error_code ec;
 
@@ -81,31 +81,31 @@ bool FileHelper::create_folder()
 	return fs::create_directories(m_path, ec);
 }
 
-bool FileHelper::exists()
+bool FileHelper::exists() noexcept
 {
 	std::error_code ec;
 	return fs::exists(m_path, ec);
 }
 
-bool FileHelper::is_file()
+bool FileHelper::is_file() noexcept
 {
 	std::error_code ec;
 	return fs::is_regular_file(m_path, ec);
 }
 
-bool FileHelper::is_folder()
+bool FileHelper::is_folder() noexcept
 {
 	std::error_code ec;
 	return fs::is_directory(m_path, ec);
 }
 
-bool FileHelper::remove()
+bool FileHelper::remove() noexcept
 {
 	std::error_code ec;
 	return fs::remove(m_path, ec);
 }
 
-bool FileHelper::write(const void* data, size_t size)
+bool FileHelper::write(const void* data, size_t size) noexcept
 {
 	auto f = std::ofstream(m_path, std::ios::binary);
 
@@ -115,7 +115,7 @@ bool FileHelper::write(const void* data, size_t size)
 	return f.write((char*)data, size).good();
 }
 
-std::unique_ptr<Gdiplus::Bitmap> FileHelper::load_image()
+std::unique_ptr<Gdiplus::Bitmap> FileHelper::load_image() noexcept
 {
 	wil::com_ptr<IStream> stream;
 	if FAILED(read(stream))
@@ -124,7 +124,7 @@ std::unique_ptr<Gdiplus::Bitmap> FileHelper::load_image()
 	return smp::image::Load(stream.get());
 }
 
-uint64_t FileHelper::file_size()
+uint64_t FileHelper::file_size() noexcept
 {
 	std::error_code ec;
 
@@ -134,7 +134,7 @@ uint64_t FileHelper::file_size()
 	return fs::file_size(m_path, ec);
 }
 
-uint64_t FileHelper::last_modified()
+uint64_t FileHelper::last_modified() noexcept
 {
 	std::error_code ec;
 	const auto last = fs::last_write_time(m_path, ec);

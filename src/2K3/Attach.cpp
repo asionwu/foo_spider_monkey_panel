@@ -10,7 +10,7 @@ Attach::Attach(Action action, metadb_handle_list_cref handles, const AlbumArtSta
 }
 
 #pragma region static
-void Attach::from_path(metadb_handle_list_cref handles, size_t type_id, std::wstring_view path)
+void Attach::from_path(metadb_handle_list_cref handles, size_t type_id, std::wstring_view path) noexcept
 {
 	const auto type = AlbumArtStatic::get_type(type_id);
 	auto data = AlbumArtStatic::to_data(path);
@@ -22,26 +22,26 @@ void Attach::from_path(metadb_handle_list_cref handles, size_t type_id, std::wst
 	}
 }
 
-void Attach::init(threaded_process_callback::ptr callback)
+void Attach::init(threaded_process_callback::ptr callback) noexcept
 {
 	threaded_process::get()->run_modeless(callback, threaded_process::flag_silent, core_api::get_main_window(), "LOL");
 }
 
-void Attach::remove_id(metadb_handle_list_cref handles, size_t type_id)
+void Attach::remove_id(metadb_handle_list_cref handles, size_t type_id) noexcept
 {
 	const auto type = AlbumArtStatic::get_type(type_id);
 	auto callback = fb2k::service_new<Attach>(Action::Remove, handles, type);
 	init(callback);
 }
 
-void Attach::remove_all(metadb_handle_list_cref handles)
+void Attach::remove_all(metadb_handle_list_cref handles) noexcept
 {
 	auto callback = fb2k::service_new<Attach>(Action::RemoveAll, handles);
 	init(callback);
 }
 #pragma endregion
 
-void Attach::run(threaded_process_status&, abort_callback& abort)
+void Attach::run(threaded_process_status&, abort_callback& abort) noexcept
 {
 	auto api = file_lock_manager::get();
 	album_art_editor::ptr ptr;

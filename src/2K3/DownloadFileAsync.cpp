@@ -10,7 +10,7 @@ DownloadFileAsync::DownloadFileAsync(HWND wnd, std::string_view url, std::wstrin
 	, m_url(url)
 	, m_path(path) {}
 
-void DownloadFileAsync::run()
+void DownloadFileAsync::run() noexcept
 {
 	bool success{};
 	std::string error_text;

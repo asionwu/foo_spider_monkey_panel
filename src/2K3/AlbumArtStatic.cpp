@@ -4,7 +4,7 @@
 
 #include <utils/image_helpers.h>
 
-HRESULT AlbumArtStatic::to_istream(const album_art_data_ptr& data, wil::com_ptr<IStream>& stream)
+HRESULT AlbumArtStatic::to_istream(const album_art_data_ptr& data, wil::com_ptr<IStream>& stream) noexcept
 {
 	RETURN_HR_IF_EXPECTED(E_FAIL, data.is_empty());
 
@@ -18,12 +18,12 @@ HRESULT AlbumArtStatic::to_istream(const album_art_data_ptr& data, wil::com_ptr<
 	return S_OK;
 }
 
-AlbumArtStatic::Type AlbumArtStatic::get_type(size_t type_id)
+AlbumArtStatic::Type AlbumArtStatic::get_type(size_t type_id) noexcept
 {
 	return *types[type_id];
 }
 
-album_art_data_ptr AlbumArtStatic::get(const metadb_handle_ptr& handle, size_t type_id, bool want_stub, bool only_embed, std::string& path)
+album_art_data_ptr AlbumArtStatic::get(const metadb_handle_ptr& handle, size_t type_id, bool want_stub, bool only_embed, std::string& path) noexcept
 {
 	if (only_embed)
 	{
@@ -68,7 +68,7 @@ album_art_data_ptr AlbumArtStatic::get(const metadb_handle_ptr& handle, size_t t
 	return data;
 }
 
-album_art_data_ptr AlbumArtStatic::get_embedded(std::string_view path, size_t type_id)
+album_art_data_ptr AlbumArtStatic::get_embedded(std::string_view path, size_t type_id) noexcept
 {
 	const auto type = get_type(type_id);
 	album_art_extractor::ptr ptr;
@@ -87,7 +87,7 @@ album_art_data_ptr AlbumArtStatic::get_embedded(std::string_view path, size_t ty
 	return data;
 }
 
-album_art_data_ptr AlbumArtStatic::to_data(IStream* stream)
+album_art_data_ptr AlbumArtStatic::to_data(IStream* stream) noexcept
 {
 	const auto size = FileHelper::get_stream_size(stream);
 
@@ -104,7 +104,7 @@ album_art_data_ptr AlbumArtStatic::to_data(IStream* stream)
 	return album_art_data_ptr();
 }
 
-album_art_data_ptr AlbumArtStatic::to_data(std::wstring_view path)
+album_art_data_ptr AlbumArtStatic::to_data(std::wstring_view path) noexcept
 {
 	album_art_data_ptr data;
 	wil::com_ptr<IStream> stream;
@@ -117,12 +117,12 @@ album_art_data_ptr AlbumArtStatic::to_data(std::wstring_view path)
 	return data;
 }
 
-bool AlbumArtStatic::check_type_id(size_t type_id)
+bool AlbumArtStatic::check_type_id(size_t type_id) noexcept
 {
 	return type_id < types.size();
 }
 
-std::unique_ptr<Gdiplus::Bitmap> AlbumArtStatic::to_bitmap(const album_art_data_ptr& data)
+std::unique_ptr<Gdiplus::Bitmap> AlbumArtStatic::to_bitmap(const album_art_data_ptr& data) noexcept
 {
 	wil::com_ptr<IStream> stream;
 	if FAILED(to_istream(data, stream))
@@ -131,7 +131,7 @@ std::unique_ptr<Gdiplus::Bitmap> AlbumArtStatic::to_bitmap(const album_art_data_
 	return smp::image::Load(stream.get());
 }
 
-void AlbumArtStatic::show_viewer(const album_art_data_ptr& data)
+void AlbumArtStatic::show_viewer(const album_art_data_ptr& data) noexcept
 {
 	if (data.is_valid())
 	{

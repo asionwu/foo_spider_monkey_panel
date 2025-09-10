@@ -2,14 +2,13 @@
 
 using Strings = std::vector<std::string>;
 
-
-inline pfc::string_base& operator<<(pfc::string_base& fmt, const std::string& source)
+inline pfc::string_base& operator<<(pfc::string_base& fmt, const std::string& source) noexcept
 {
 	fmt.add_string_(source.c_str());
 	return fmt;
 }
 
-static std::string json_to_string(JSON& j)
+static std::string json_to_string(JSON& j) noexcept
 {
 	if (j.is_string())
 	{
@@ -26,7 +25,7 @@ static std::string json_to_string(JSON& j)
 	}
 }
 
-static Strings json_to_strings(JSON& j)
+static Strings json_to_strings(JSON& j) noexcept
 {
 	if (!j.is_array())
 	{

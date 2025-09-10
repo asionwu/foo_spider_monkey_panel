@@ -19,7 +19,7 @@ namespace CustomSort
 	using Order = pfc::array_t<size_t>;
 
 	template <int32_t direction>
-	static bool sort_compare(const Item& a, const Item& b)
+	static bool sort_compare(const Item& a, const Item& b) noexcept
 	{
 		const auto ret = direction * StrCmpLogicalW(a.text, b.text);
 
@@ -29,7 +29,7 @@ namespace CustomSort
 		return ret < 0;
 	}
 
-	static Order order(size_t count)
+	static Order order(size_t count) noexcept
 	{
 		Order sort_order;
 		sort_order.set_size(count);
@@ -37,7 +37,7 @@ namespace CustomSort
 		return sort_order;
 	}
 
-	static Order sort(pfc::array_t<Item>& items, int32_t direction = 1)
+	static Order sort(pfc::array_t<Item>& items, int32_t direction = 1) noexcept
 	{
 		ranges::sort(items, direction > 0 ? sort_compare<1> : sort_compare<-1>);
 

@@ -15,7 +15,7 @@ public:
 	ThreadPool& operator=(const ThreadPool&) = delete;
 
 	template <typename T>
-	void AddTask(T&& task)
+	void AddTask(T&& task) noexcept
 	{
 		static_assert(std::is_invocable_v<T>);
 		static_assert(std::is_move_constructible_v<T> || std::is_copy_constructible_v<T>);
@@ -54,11 +54,11 @@ public:
 		}
 	}
 
-	void Finalize();
+	void Finalize() noexcept;
 
 private:
-	void AddThread();
-	void ThreadProc();
+	void AddThread() noexcept;
+	void ThreadProc() noexcept;
 
 private:
 	const size_t maxThreadCount_;

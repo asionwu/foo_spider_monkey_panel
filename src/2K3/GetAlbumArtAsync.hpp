@@ -14,7 +14,7 @@ public:
 		, m_want_stub(want_stub)
 		, m_only_embed(only_embed) {}
 
-	void run() final
+	void run() noexcept final
 	{
 		if (m_handle.is_empty())
 			return;
