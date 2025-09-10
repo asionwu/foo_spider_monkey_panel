@@ -873,6 +873,7 @@ std::optional<LRESULT> js_panel_window::ProcessWindowMessage(const MSG& msg)
 										 EventPriority::kInput);
 		return 0;
 	}
+	case WM_SYSKEYUP:
 	case WM_KEYUP:
 	{
 		EventDispatcher::Get().PutEvent(wnd_,
