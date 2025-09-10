@@ -10,6 +10,10 @@ requires at least `foobar2000` `2.0`.
 
 # Changelog
 
+## 1.6.2.25.09.10
+- Fix bug where the `on_key_up` callback was not triggered for certain keys.
+- Fix missing auto-complete entry for `on_download_file_done`.
+
 ## 1.6.2.25.09.06
 - Various internal improvements.
 - Minor sample fixes.
